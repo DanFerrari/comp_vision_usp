@@ -9,6 +9,7 @@ Created on Wed Oct 21 16:48:35 2020
 import numpy as np
 import cv2 as cv
 import imutils
+from pathlib import Path
 
 from imutils import contours
 
@@ -29,7 +30,11 @@ class ocr_Helper():
         # and threshold it, such that the digits appear as *white* on a
         # *black* background
         # and invert it, such that the digits appear as *white* on a *black*
-        ref = cv.imread("ocr_a_reference.png")
+        reference_path = Path(__file__).resolve().parent / "ocr_a_reference.png"
+        ref = cv.imread(str(reference_path))
+
+        if ref is None:
+            raise FileNotFoundError(f"Não foi possível carregar a imagem de referência: {reference_path}")
         
         ref = cv.cvtColor(ref, cv.COLOR_BGR2GRAY)
         ref = cv.threshold(ref, 10, 255, cv.THRESH_BINARY_INV)[1]
